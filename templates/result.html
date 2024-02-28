@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+</head>
+<body>
+    <h1>Result</h1>
+    <h2>Input Image</h2>
+    <img src="{{ url_for('uploaded_file', filename=input_image) }}" alt="Input Image" style="max-width: 50%;">
+    <h2>Output Image</h2>
+    <img src="{{ url_for('output_file', filename=output_image) }}" alt="Output Image" style="max-width: 50%;">
+    <!-- The rest of the template... -->
+</body>
+</html>

@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+#imageContainer {
+    display: none; /* Initially hide the image container */
+}
+
+#imageContainer img {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 10px;
+}
+
+#imageContainer p {
+    margin-bottom: 5px;
+}

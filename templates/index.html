@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contamin-AI: Waste Contamination Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .header h1 {
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            flex-grow: 1;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .file-input-wrapper {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input {
+            padding: 10px;
+            border: 2px solid #5d001e;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+        }
+        .upload-button {
+            padding: 10px 0; /* Adjusted padding */
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            width: 100%;
+        }
+        .upload-button:hover {
+            background-color: #0056b3;
+        }
+        .image-box {
+            width: 70%;
+            border: 1px solid #5d001e;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .calculation-box {
+            width: 30%;
+            border: 1px solid #5d001e;
+            border-radius: 5px;
+            padding: 20px;
+            margin-left: 20px;
+        }
+        .calculation-box.green {
+            background-color: #4CAF50;
+        }
+        .calculation-box.red {
+            background-color: #FF0000;
+        }
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Contamin-AI: Waste Contamination Detection</h1>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <form id="upload-form" action="/" method="post" enctype="multipart/form-data" style="width: 100%;">
+                <div class="file-input-wrapper">
+                    <input class="file-input" type="file" name="file" accept="image/*" onchange="showTick()">
+                    <span class="upload-button" id="choose-file">Choose File</span>
+                </div>
+                <input class="upload-button" type="submit" value="Process">
+                <p id="file-uploaded-msg" style="display: none; color: #4CAF50;">File Uploaded</p>
+            </form>
+        </div>
+
+        <div class="image-box">
+            {% if concatenated_image %}
+            <img src="data:image/jpeg;base64,{{ concatenated_image }}" alt="Concatenated Image">
+            {% endif %}
+        </div>
+        {% if bin_mm is not none %}
+        <div class="calculation-box {% if contamination_percent is not none and contamination_percent <= 10 %}green{% else %}red{% endif %}">
+            <h2>Area Calculation:</h2>
+            <p>Bin Area (mm^2): {{ bin_mm }}</p>
+            <p>NBD Area (mm^2): {{ nbd_mm }}</p>
+            <p>Contamination Percentage: {{ contamination_percent }}%</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        function showTick() {
+            var fileInput = document.querySelector('.file-input');
+            var fileUploadedMsg = document.getElementById("file-uploaded-msg");
+            if (fileInput.files.length > 0) {
+                document.getElementById("choose-file").innerHTML = "File Selected &#10003;";
+                fileUploadedMsg.style.display = "block"; // Show file uploaded message
+            } else {
+                document.getElementById("choose-file").innerHTML = "Choose File";
+                fileUploadedMsg.style.display = "none"; // Hide file uploaded message
+            }
+        }
+
+        document.getElementById("upload-form").addEventListener("submit", function() {
+            document.getElementById("loading-overlay").style.display = "flex";
+            document.getElementById("file-uploaded-msg").style.display = "none"; // Hide file uploaded message
+        });
+    </script>
+</body>
+</html>
