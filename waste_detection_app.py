@@ -1,3 +1,4 @@
+import os
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 from detectron2.data import MetadataCatalog
@@ -8,8 +9,15 @@ from PIL import Image
 import numpy as np
 
 # Path to the saved model weights
+
 model_weights_path = "model_final.pth"
 yaml_config_path = "config.yaml"
+
+# Check if model weights exist
+GOOGLE_DRIVE_LINK = "https://drive.google.com/drive/folders/1UojE6f6HHQ86VHqSxafFonFsXV0IGugK"
+if not os.path.exists(model_weights_path):
+  st.error(f"Required model weights file 'model_final.pth' not found. Please download it from: {GOOGLE_DRIVE_LINK}")
+  st.stop()
 
 # Create a new Detectron2 config
 cfg = get_cfg()

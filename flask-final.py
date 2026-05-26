@@ -18,6 +18,13 @@ app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
 
 # Function to perform inference and save the output image
 def perform_inference(input_image_path, output_image_path):
+    model_weights_path = "model_final.pth"
+    yaml_config_path = "config.yaml"
+
+    # Check if model weights exist
+    GOOGLE_DRIVE_LINK = "https://drive.google.com/drive/folders/1UojE6f6HHQ86VHqSxafFonFsXV0IGugK"
+    if not os.path.exists(model_weights_path):
+        raise FileNotFoundError(f"Required model weights file 'model_final.pth' not found. Please download it from: {GOOGLE_DRIVE_LINK}")
     # Path to the saved model weights
     model_weights_path = "model_final.pth"
     yaml_config_path = "config.yaml"
